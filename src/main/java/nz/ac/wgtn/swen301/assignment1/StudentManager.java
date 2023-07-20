@@ -5,7 +5,7 @@ import java.sql.*;
 import java.util.Collection;
 
 /**
- * A student managers providing basic CRUD operations for instances of Student, and a read operation for instances of Degree.
+ * A student manager providing basic CRUD operations for instances of Student, and a read operation for instances of Degree.
  * @author jens dietrich
  */
 public class StudentManager {
@@ -25,7 +25,7 @@ public class StudentManager {
      * @param id
      * @return
      * @throws NoSuchRecordException if no record with such an id exists in the database
-     * This functionality is to be tested in test.nz.ac.wgtn.swen301.assignment1.TestStudentManager::test_readStudent (followed by optional numbers if multiple tests are used)
+     * This functionality is to be tested in nz.ac.wgtn.swen301.assignment1.TestStudentManager::testFetchStudent (followed by optional numbers if multiple tests are used)
      */
     public static Student fetchStudent(String id) throws NoSuchRecordException {
         return null;
@@ -37,7 +37,7 @@ public class StudentManager {
      * @param id
      * @return
      * @throws NoSuchRecordException if no record with such an id exists in the database
-     * This functionality is to be tested in test.nz.ac.wgtn.swen301.assignment1.TestStudentManager::test_readDegree (followed by optional numbers if multiple tests are used)
+     * This functionality is to be tested in nz.ac.wgtn.swen301.assignment1.TestStudentManager::testFetchDegree (followed by optional numbers if multiple tests are used)
      */
     public static Degree fetchDegree(String id) throws NoSuchRecordException {
         return null;
@@ -48,7 +48,7 @@ public class StudentManager {
      * I.e., after this, trying to read a student with this id will result in a NoSuchRecordException.
      * @param student
      * @throws NoSuchRecordException if no record corresponding to this student instance exists in the database
-     * This functionality is to be tested in test.nz.ac.wgtn.swen301.assignment1.TestStudentManager::test_delete
+     * This functionality is to be tested in nz.ac.wgtn.swen301.assignment1.TestStudentManager::testRemove
      */
     public static void remove(Student student) throws NoSuchRecordException {}
 
@@ -60,21 +60,21 @@ public class StudentManager {
      * There is no special handling required to enforce this, just ensure that tests only use values with < 10 characters.
      * @param student
      * @throws NoSuchRecordException if no record corresponding to this student instance exists in the database
-     * This functionality is to be tested in test.nz.ac.wgtn.swen301.assignment1.TestStudentManager::test_update (followed by optional numbers if multiple tests are used)
+     * This functionality is to be tested in nz.ac.wgtn.swen301.assignment1.TestStudentManager::testUpdate (followed by optional numbers if multiple tests are used)
      */
     public static void update(Student student) throws NoSuchRecordException {}
 
 
     /**
      * Create a new student with the values provided, and save it to the database.
-     * The student must have a new id that is not been used by any other Student instance or STUDENTS record (row).
+     * The student must have a new id that is not being used by any other Student instance or STUDENTS record (row).
      * Note that names and first names can only be max 1o characters long.
      * There is no special handling required to enforce this, just ensure that tests only use values with < 10 characters.
      * @param name
      * @param firstName
      * @param degree
      * @return a freshly created student instance
-     * This functionality is to be tested in test.nz.ac.wgtn.swen301.assignment1.TestStudentManager::test_createStudent (followed by optional numbers if multiple tests are used)
+     * This functionality is to be tested in nz.ac.wgtn.swen301.assignment1.TestStudentManager::testNewStudent (followed by optional numbers if multiple tests are used)
      */
     public static Student newStudent(String name,String firstName,Degree degree) {
         return null;
@@ -83,7 +83,7 @@ public class StudentManager {
     /**
      * Get all student ids currently being used in the database.
      * @return
-     * This functionality is to be tested in test.nz.ac.wgtn.swen301.assignment1.TestStudentManager::test_getAllStudentIds (followed by optional numbers if multiple tests are used)
+     * This functionality is to be tested in nz.ac.wgtn.swen301.assignment1.TestStudentManager::testFetchAllStudentIds (followed by optional numbers if multiple tests are used)
      */
     public static Collection<String> fetchAllStudentIds() {
         return null;
@@ -92,7 +92,7 @@ public class StudentManager {
     /**
      * Get all degree ids currently being used in the database.
      * @return
-     * This functionality is to be tested in test.nz.ac.wgtn.swen301.assignment1.TestStudentManager::test_getAllDegreeIds (followed by optional numbers if multiple tests are used)
+     * This functionality is to be tested in nz.ac.wgtn.swen301.assignment1.TestStudentManager::testFetchAllDegreeIds (followed by optional numbers if multiple tests are used)
      */
     public static Iterable<String> fetchAllDegreeIds() {
         return null;

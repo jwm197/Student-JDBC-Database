@@ -1,4 +1,4 @@
-package test.nz.ac.wgtn.swen301.assignment1;
+package nz.ac.wgtn.swen301.assignment1;
 
 import nz.ac.wgtn.swen301.assignment1.StudentManager;
 import nz.ac.wgtn.swen301.studentdb.Student;
