@@ -1,6 +1,6 @@
 package nz.ac.wgtn.swen301.assignment1.cli;
 
-public class FindStudentDetails {
+public class StudentManagerUI {
 
     // THE FOLLOWING METHOD MUST BE IMPLEMENTED
     /**

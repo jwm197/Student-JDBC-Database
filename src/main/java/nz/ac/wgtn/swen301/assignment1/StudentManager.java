@@ -89,14 +89,6 @@ public class StudentManager {
         return null;
     }
 
-    /**
-     * Get all degree ids currently being used in the database.
-     * @return
-     * This functionality is to be tested in nz.ac.wgtn.swen301.assignment1.TestStudentManager::testFetchAllDegreeIds (followed by optional numbers if multiple tests are used)
-     */
-    public static Iterable<String> fetchAllDegreeIds() {
-        return null;
-    }
 
 
 }
