@@ -28,17 +28,12 @@
             <scope>test</scope>
         </dependency>
 
-        <dependency>
-            <groupId>org.apache.derby</groupId>
-            <artifactId>derby</artifactId>
-            <version>10.16.1.1</version>
-        </dependency>
-        <!-- the embedded driver used is in here ! -->
-        <dependency>
-            <groupId>org.apache.derby</groupId>
-            <artifactId>derbytools</artifactId>
-            <version>10.16.1.1</version>
-        </dependency>
+      <!-- careful upgrading: newer versions seem to have been compiled with Java 17 !! -->
+    <dependency>
+        <groupId>org.apache.derby</groupId>
+        <artifactId>derby</artifactId>
+        <version>10.14.2.0</version>
+      </dependency>
 
         <!-- to be used for the CLI -->
         <dependency>
@@ -54,14 +49,13 @@
             <version>32.1.1-jre</version>
         </dependency>
 
-
         <!-- local dependency to setup database -->
         <dependency>
             <groupId>nz.ac.wgtn.swen301</groupId>
             <artifactId>studentdb</artifactId>
-            <version>1.3.0</version>
+            <version>1.3.1</version>
             <scope>system</scope>
-            <systemPath>${project.basedir}/lib/studentdb-1.3.0.jar</systemPath>
+            <systemPath>${project.basedir}/lib/studentdb-1.3.1.jar</systemPath>
         </dependency>
     </dependencies>
 </project>
