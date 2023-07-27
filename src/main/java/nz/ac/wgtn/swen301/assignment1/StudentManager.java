@@ -3,6 +3,7 @@ package nz.ac.wgtn.swen301.assignment1;
 import nz.ac.wgtn.swen301.studentdb.*;
 import java.sql.*;
 import java.util.Collection;
+import java.util.HashMap;
 
 /**
  * A student manager providing basic CRUD operations for instances of Student, and a read operation for instances of Degree.
@@ -16,7 +17,7 @@ public class StudentManager {
         StudentDB.init();
     }
     // DO NOT REMOVE BLOCK ENDS HERE
-
+    private static HashMap<String,Student>students=new HashMap<>();
     // THE FOLLOWING METHODS MUST BE IMPLEMENTED :
 
     /**
@@ -28,7 +29,38 @@ public class StudentManager {
      * This functionality is to be tested in nz.ac.wgtn.swen301.assignment1.TestStudentManager::testFetchStudent (followed by optional numbers if multiple tests are used)
      */
     public static Student fetchStudent(String id) throws NoSuchRecordException {
-        return null;
+        if(students.containsKey(id)){
+            return students.get(id);
+        }
+        Connection conn;
+        Statement stmt;
+        String url = "jdbc:derby:memory:studentdb";
+        try {
+
+            conn = DriverManager.getConnection(url);
+            stmt = conn.createStatement();
+            String sql = "SELECT * FROM STUDENTS WHERE id='" + id + "' ";
+
+            ResultSet rs = stmt.executeQuery(sql);
+            if (rs.next()) {
+                Student student= new Student(rs.getString("id"),rs.getString("first_name"), rs.getString("name"),fetchDegree(rs.getString("degree")));
+                students.put(id,student);
+                rs.close();
+                stmt.close();
+                conn.close();
+                return student;
+            }
+            throw new NoSuchRecordException("Record for id "+id+" Not found");
+        }
+        catch (SQLException e){
+            throw new NoSuchRecordException("Record for id "+id+" Not found "+e);
+        }
+
+
+
+
+
+        //return null;
     }
 
     /**
