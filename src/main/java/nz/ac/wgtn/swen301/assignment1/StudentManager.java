@@ -18,13 +18,14 @@ public class StudentManager {
     }
     // DO NOT REMOVE BLOCK ENDS HERE
     private static HashMap<String,Student>students=new HashMap<>();
+    private static HashMap<String,Degree>degrees=new HashMap<>();
     // THE FOLLOWING METHODS MUST BE IMPLEMENTED :
 
     /**
      * Return a student instance with values from the row with the respective id in the database.
      * If an instance with this id already exists, return the existing instance and do not create a second one.
-     * @param id
-     * @return
+     * @param id The id of the student
+     * @return the student with the id
      * @throws NoSuchRecordException if no record with such an id exists in the database
      * This functionality is to be tested in nz.ac.wgtn.swen301.assignment1.TestStudentManager::testFetchStudent (followed by optional numbers if multiple tests are used)
      */
@@ -55,12 +56,6 @@ public class StudentManager {
         catch (SQLException e){
             throw new NoSuchRecordException("Record for id "+id+" Not found "+e);
         }
-
-
-
-
-
-        //return null;
     }
 
     /**
@@ -72,7 +67,32 @@ public class StudentManager {
      * This functionality is to be tested in nz.ac.wgtn.swen301.assignment1.TestStudentManager::testFetchDegree (followed by optional numbers if multiple tests are used)
      */
     public static Degree fetchDegree(String id) throws NoSuchRecordException {
-        return null;
+        if(degrees.containsKey(id)){
+            return degrees.get(id);
+        }
+        Connection conn;
+        Statement stmt;
+        String url = "jdbc:derby:memory:studentdb";
+        try {
+
+            conn = DriverManager.getConnection(url);
+            stmt = conn.createStatement();
+            String sql = "SELECT * FROM DEGREES WHERE id='" + id + "' ";
+
+            ResultSet rs = stmt.executeQuery(sql);
+            if (rs.next()) {
+                Degree degree=new Degree(rs.getString("id"),rs.getString("name"));
+                degrees.put(id,degree);
+                rs.close();
+                stmt.close();
+                conn.close();
+                return degree;
+            }
+            throw new NoSuchRecordException("Record for id "+id+" Not found");
+        }
+        catch (SQLException e){
+            throw new NoSuchRecordException("Record for id "+id+" Not found "+e);
+        }
     }
 
     /**
