@@ -19,6 +19,7 @@ public class StudentManager {
     // DO NOT REMOVE BLOCK ENDS HERE
     private static HashMap<String,Student>students=new HashMap<>();
     private static HashMap<String,Degree>degrees=new HashMap<>();
+    private static final String url = "jdbc:derby:memory:studentdb";
     // THE FOLLOWING METHODS MUST BE IMPLEMENTED :
 
     /**
@@ -72,7 +73,7 @@ public class StudentManager {
         }
         Connection conn;
         Statement stmt;
-        String url = "jdbc:derby:memory:studentdb";
+
         try {
 
             conn = DriverManager.getConnection(url);
@@ -102,7 +103,31 @@ public class StudentManager {
      * @throws NoSuchRecordException if no record corresponding to this student instance exists in the database
      * This functionality is to be tested in nz.ac.wgtn.swen301.assignment1.TestStudentManager::testRemove
      */
-    public static void remove(Student student) throws NoSuchRecordException {}
+    public static void remove(Student student) throws NoSuchRecordException {
+        if (student.equals(null)){
+            throw new NoSuchRecordException("Student is null");
+        }
+        if(students.containsValue(student)){
+            students.remove(student.getId());
+        }
+        Connection conn;
+        Statement stmt;
+
+        try {
+            conn = DriverManager.getConnection(url);
+            stmt = conn.createStatement();
+            String sql = "DELETE * FROM DEGREES WHERE id='" + student.getId() + "' ";
+            ResultSet rs = stmt.executeQuery(sql);
+            rs.close();
+            stmt.close();
+            conn.close();
+        }
+        catch (SQLException e){
+            throw new NoSuchRecordException("Record for student "+student.toString()+" Not found "+e);
+        }
+
+
+    }
 
     /**
      * Update (synchronize) a student instance with the database.
