@@ -17,9 +17,11 @@ public class StudentManager {
         StudentDB.init();
     }
     // DO NOT REMOVE BLOCK ENDS HERE
+    //cashes so you don't have to look up in the db every time:
     private static HashMap<String,Student>students=new HashMap<>();
     private static HashMap<String,Degree>degrees=new HashMap<>();
-    private static final String url = "jdbc:derby:memory:studentdb";
+
+    private static final String url = "jdbc:derby:memory:studentdb";//db url
     // THE FOLLOWING METHODS MUST BE IMPLEMENTED :
 
     /**
@@ -62,8 +64,8 @@ public class StudentManager {
     /**
      * Return a degree instance with values from the row with the respective id in the database.
      * If an instance with this id already exists, return the existing instance and do not create a second one.
-     * @param id
-     * @return
+     * @param id the id of the degree being fetched
+     * @return a degree object containing the degree being fetched
      * @throws NoSuchRecordException if no record with such an id exists in the database
      * This functionality is to be tested in nz.ac.wgtn.swen301.assignment1.TestStudentManager::testFetchDegree (followed by optional numbers if multiple tests are used)
      */
@@ -99,12 +101,12 @@ public class StudentManager {
     /**
      * Delete a student instance from the database.
      * I.e., after this, trying to read a student with this id will result in a NoSuchRecordException.
-     * @param student
+     * @param student the student being removed
      * @throws NoSuchRecordException if no record corresponding to this student instance exists in the database
      * This functionality is to be tested in nz.ac.wgtn.swen301.assignment1.TestStudentManager::testRemove
      */
     public static void remove(Student student) throws NoSuchRecordException {
-        if (student.equals(null)){
+        if (student==null){
             throw new NoSuchRecordException("Student is null");
         }
         if(students.containsValue(student)){
@@ -116,7 +118,7 @@ public class StudentManager {
         try {
             conn = DriverManager.getConnection(url);
             stmt = conn.createStatement();
-            String sql = "DELETE * FROM DEGREES WHERE id='" + student.getId() + "' ";
+            String sql = "DELETE * FROM STUDENTS WHERE id='" + student.getId() + "' ";
             ResultSet rs = stmt.executeQuery(sql);
             rs.close();
             stmt.close();
@@ -135,11 +137,35 @@ public class StudentManager {
      * After executing this command, the attribute values of the object and the respective database value are consistent.
      * Note that names and first names can only be max 1o characters long.
      * There is no special handling required to enforce this, just ensure that tests only use values with < 10 characters.
-     * @param student
+     * @param student the student being updated
      * @throws NoSuchRecordException if no record corresponding to this student instance exists in the database
      * This functionality is to be tested in nz.ac.wgtn.swen301.assignment1.TestStudentManager::testUpdate (followed by optional numbers if multiple tests are used)
      */
-    public static void update(Student student) throws NoSuchRecordException {}
+    public static void update(Student student) throws NoSuchRecordException {
+        if(student==null){
+            throw new NoSuchRecordException("Student is null");
+        }
+        else if(student.getId()==null){
+            throw new NoSuchRecordException("Student ID is null");
+        }
+        Connection conn;
+        Statement stmt;
+
+        try {
+            conn = DriverManager.getConnection(url);
+            stmt = conn.createStatement();
+            String sql = "UPDATE STUDENTS SET first_name ="+ student.getFirstName() +", name = "+student.getName()+", degree ="+student.getDegree()+"WHERE id='" + student.getId() + "' ";
+            stmt.executeUpdate(sql);
+            stmt.close();
+            conn.close();
+            students.put(student.getId(), student);
+        }
+        catch (SQLException e){
+            throw new NoSuchRecordException("Record for student "+student.toString()+" Not found "+e);
+        }
+
+
+    }
 
 
     /**
@@ -147,13 +173,14 @@ public class StudentManager {
      * The student must have a new id that is not being used by any other Student instance or STUDENTS record (row).
      * Note that names and first names can only be max 1o characters long.
      * There is no special handling required to enforce this, just ensure that tests only use values with < 10 characters.
-     * @param name
-     * @param firstName
-     * @param degree
+     * @param name The last name of the student
+     * @param firstName the first name of the student
+     * @param degree The degree the student is doing
      * @return a freshly created student instance
      * This functionality is to be tested in nz.ac.wgtn.swen301.assignment1.TestStudentManager::testNewStudent (followed by optional numbers if multiple tests are used)
      */
     public static Student newStudent(String name,String firstName,Degree degree) {
+
         return null;
     }
 
