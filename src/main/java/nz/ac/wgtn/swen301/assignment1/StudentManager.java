@@ -20,8 +20,8 @@ public class StudentManager {
     }
     // DO NOT REMOVE BLOCK ENDS HERE
     //cashes so you don't have to look up in the db every time:
-    private static HashMap<String,Student>students=new HashMap<>();
-    private static HashMap<String,Degree>degrees=new HashMap<>();
+    private static final HashMap<String,Student>students=new HashMap<>();
+    private static final HashMap<String,Degree>degrees=new HashMap<>();
     private static final String url = "jdbc:derby:memory:studentdb";//db url
     // THE FOLLOWING METHODS MUST BE IMPLEMENTED :
 
@@ -47,6 +47,7 @@ public class StudentManager {
 
             ResultSet rs = stmt.executeQuery(sql);
             if (rs.next()) {
+
                 Student student= new Student(rs.getString("id"),rs.getString("first_name"), rs.getString("name"),fetchDegree(rs.getString("degree")));
                 students.put(id,student);
                 rs.close();
@@ -125,7 +126,7 @@ public class StudentManager {
             conn.close();
         }
         catch (SQLException e){
-            throw new NoSuchRecordException("Record for student "+student.toString()+" Not found "+e);
+            throw new NoSuchRecordException("Record for student "+student+" Not found "+e);
         }
 
 
@@ -161,7 +162,7 @@ public class StudentManager {
             students.put(student.getId(), student);
         }
         catch (SQLException e){
-            throw new NoSuchRecordException("Record for student "+student.toString()+" Not found "+e);
+            throw new NoSuchRecordException("Record for student "+student+" Not found "+e);
         }
 
 
@@ -180,8 +181,30 @@ public class StudentManager {
      * This functionality is to be tested in nz.ac.wgtn.swen301.assignment1.TestStudentManager::testNewStudent (followed by optional numbers if multiple tests are used)
      */
     public static Student newStudent(String name,String firstName,Degree degree) {
+        Connection conn;
+        Statement stmt;
+        try {
 
-        new Student(id,name,firstName,degree);
+            conn = DriverManager.getConnection(url);
+            stmt = conn.createStatement();
+            String sql = "FROM STUDENTS SELECT MAX(CAST(SUBSTRING(ID, 3) AS SIGNED)) AS max_id ";
+
+            ResultSet rs = stmt.executeQuery(sql);
+            String id="ID";
+            if (rs.next()) {
+                id=id+rs;
+            }
+                Student student= new Student(id,name,firstName,degree);
+                students.put(id,student);
+                rs.close();
+                stmt.close();
+                conn.close();
+                return student;
+            }
+
+        catch (SQLException e){
+            System.out.println("SQL exception unable to connect" +e);
+        }
         return null;
     }
 
