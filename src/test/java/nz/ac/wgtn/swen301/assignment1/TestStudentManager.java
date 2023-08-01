@@ -51,24 +51,52 @@ public class TestStudentManager {
     @Test
     public void testFetchStudent4()throws Exception{
         Student student = StudentManager.fetchStudent("id3");
-        assertFalse(new Student("id3","James","Smith",new Degree("deg0","BSc Computer Science")).equals(student));
+        assertNotEquals(new Student("id3","James","Smith",new Degree("deg0","BSc Computer Science")),student);
 
     }
     @Test
-    public void testFetchStudent5()throws Exception{
+    public void testFetchStudent5() {
         try{
             Student student = StudentManager.fetchStudent("id-3");
             fail("Id shouldn't exist");
         }
-        catch (NoSuchRecordException e){}
+        catch (NoSuchRecordException ignored){}
     }
     @Test
-    public void testFetchStudent6()throws Exception{
+    public void testFetchStudent6() {
         try{
             Student student = StudentManager.fetchStudent(null);
             fail("Id shouldn't be null");
         }
-        catch (NoSuchRecordException e){}
+        catch (NoSuchRecordException ignored){}
     }
+    @Test
+    public void testFetchDegree1() throws NoSuchRecordException {
+        Degree degree = StudentManager.fetchDegree("deg2");
+        assertEquals(degree,new Degree("deg2","BE Cybersecurity"));
+    }
+    @Test
+    public void testFetchDegree2() throws NoSuchRecordException {
+        Degree degree = StudentManager.fetchDegree("deg2");
+        assertEquals(degree,new Degree("deg2","BE Cybersecurity"));
+    }
+    @Test
+    public void testFetchDegree3() {
+        try{
+            StudentManager.fetchDegree(null);
+            fail("Id shouldn't be null");
+        }
+        catch (NoSuchRecordException ignored){}
+    }
+    @Test
+    public void testFetchDegree4() {
+        try{
+            StudentManager.fetchDegree("deg-2");
+            fail("Id shouldn't exist");
+        }
+        catch (NoSuchRecordException ignored){}
+    }
+
+
 
 }

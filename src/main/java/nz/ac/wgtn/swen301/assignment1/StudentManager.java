@@ -71,14 +71,14 @@ public class StudentManager {
      * This functionality is to be tested in nz.ac.wgtn.swen301.assignment1.TestStudentManager::testFetchDegree (followed by optional numbers if multiple tests are used)
      */
     public static Degree fetchDegree(String id) throws NoSuchRecordException {
-        if(degrees.containsKey(id)){
-            return degrees.get(id);
-        }
-        Connection conn;
-        Statement stmt;
+
 
         try {
-
+            if(degrees.containsKey(id)){
+                return degrees.get(id);
+            }
+            Connection conn;
+            Statement stmt;
             conn = DriverManager.getConnection(url);
             stmt = conn.createStatement();
             String sql = "SELECT * FROM DEGREES WHERE id='" + id + "' ";
@@ -94,7 +94,7 @@ public class StudentManager {
             }
             throw new NoSuchRecordException("Record for id "+id+" Not found");
         }
-        catch (SQLException e){
+        catch (NullPointerException|SQLException e){
             throw new NoSuchRecordException("Record for id "+id+" Not found "+e);
         }
     }
