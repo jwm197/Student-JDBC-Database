@@ -2,8 +2,10 @@ package nz.ac.wgtn.swen301.assignment1;
 
 import nz.ac.wgtn.swen301.studentdb.*;
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * A student manager providing basic CRUD operations for instances of Student, and a read operation for instances of Degree.
@@ -20,7 +22,6 @@ public class StudentManager {
     //cashes so you don't have to look up in the db every time:
     private static HashMap<String,Student>students=new HashMap<>();
     private static HashMap<String,Degree>degrees=new HashMap<>();
-
     private static final String url = "jdbc:derby:memory:studentdb";//db url
     // THE FOLLOWING METHODS MUST BE IMPLEMENTED :
 
@@ -38,7 +39,6 @@ public class StudentManager {
         }
         Connection conn;
         Statement stmt;
-        String url = "jdbc:derby:memory:studentdb";
         try {
 
             conn = DriverManager.getConnection(url);
@@ -181,16 +181,38 @@ public class StudentManager {
      */
     public static Student newStudent(String name,String firstName,Degree degree) {
 
+        new Student(id,name,firstName,degree);
         return null;
     }
 
     /**
      * Get all student ids currently being used in the database.
-     * @return
+     * @return collection of ids
      * This functionality is to be tested in nz.ac.wgtn.swen301.assignment1.TestStudentManager::testFetchAllStudentIds (followed by optional numbers if multiple tests are used)
      */
     public static Collection<String> fetchAllStudentIds() {
-        return null;
+        Connection conn;
+        Statement stmt;
+        List<String>ids=new ArrayList<>();
+        try {
+
+            conn = DriverManager.getConnection(url);
+            stmt = conn.createStatement();
+            String sql = "SELECT * FROM STUDENTS";
+
+            ResultSet rs = stmt.executeQuery(sql);
+            while(rs.next()) {
+               ids.add(rs.getString("id"));
+            }
+            rs.close();
+            stmt.close();
+            conn.close();
+            return ids;
+        }
+        catch (SQLException e){
+            return null;//throw new NoSuchRecordException("Failed to get ids"+e);
+        }
+
     }
 
 
