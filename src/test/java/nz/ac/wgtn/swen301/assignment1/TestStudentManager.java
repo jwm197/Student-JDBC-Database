@@ -96,6 +96,49 @@ public class TestStudentManager {
         }
         catch (NoSuchRecordException ignored){}
     }
+    @Test
+    public void testFetchDegree5() throws NoSuchRecordException {
+        Degree degree = StudentManager.fetchDegree("deg5");
+        assertSame(degree,StudentManager.fetchDegree("deg5"));
+    }
+    @Test
+    public void testRemove1() throws NoSuchRecordException {
+        Student student = StudentManager.fetchStudent("id0");
+        StudentManager.remove(student);
+        try{
+            StudentManager.fetchStudent("id0");
+            fail("Student shouldn't exist");
+        }
+        catch (NoSuchRecordException ignored){}
+    }
+    @Test
+    public void testRemove2() throws NoSuchRecordException {
+        try{
+            StudentManager.remove(null);
+            fail("Student shouldn't be null");
+        }
+        catch (NoSuchRecordException ignored){}
+    }
+    @Test
+    public void testRemove3() throws NoSuchRecordException {
+        try{
+            Student student=new Student();//assigns null id to object
+            StudentManager.remove(student);
+            fail("Student shouldn't have null id");
+        }
+        catch (NoSuchRecordException ignored){}
+    }
+    @Test
+    public void testRemove4() throws NoSuchRecordException {
+        Student student = StudentManager.fetchStudent("id7");
+        StudentManager.remove(student);
+        try{
+            StudentManager.remove(student);
+            fail("Student shouldn't exist to remove");
+        }
+        catch (NoSuchRecordException ignored){}
+    }
+
 
 
 

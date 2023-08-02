@@ -110,6 +110,9 @@ public class StudentManager {
         if (student==null){
             throw new NoSuchRecordException("Student is null");
         }
+        else if(student.getId()==null){
+            throw new NoSuchRecordException("Student ID is null");
+        }
         if(students.containsValue(student)){
             students.remove(student.getId());
         }
@@ -119,9 +122,9 @@ public class StudentManager {
         try {
             conn = DriverManager.getConnection(url);
             stmt = conn.createStatement();
-            String sql = "DELETE * FROM STUDENTS WHERE id='" + student.getId() + "' ";
-            ResultSet rs = stmt.executeQuery(sql);
-            rs.close();
+            String sql = "DELETE FROM STUDENTS WHERE id='" + student.getId() + "' ";
+            stmt.executeUpdate(sql);
+
             stmt.close();
             conn.close();
         }
