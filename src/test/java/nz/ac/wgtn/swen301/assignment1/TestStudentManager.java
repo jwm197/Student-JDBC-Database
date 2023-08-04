@@ -19,43 +19,39 @@ public class TestStudentManager {
     @BeforeEach
     public  void init () {
         StudentDB.init();
+        new StudentManager();//reset the cache
     }
     // DO NOT REMOVE BLOCK ENDS HERE
 
     @Test
     public void dummyTest() throws Exception {
-        Student student = new StudentManager().fetchStudent("id42");
+        Student student = StudentManager.fetchStudent("id42");
         // THIS WILL INITIALLY FAIL !!
         assertNotNull(student);
     }
     @Test
     public void testFetchStudent1()throws Exception{
         Student student = StudentManager.fetchStudent("id0");
-        assertEquals(new Student("id0","James","Smith",new Degree("deg0","BSc Computer Science")),student);
+        assertEquals(student,new Student("id0","James","Smith",new Degree("deg0","BSc Computer Science")));
 
     }
+
     @Test
     public void testFetchStudent2()throws Exception{
-        //test is the same as above to test cached version rather than getting from the db directly as in testFetchStudent1
-        Student student = StudentManager.fetchStudent("id0");
-        assertEquals(new Student("id0","James","Smith",new Degree("deg0","BSc Computer Science")),student);
 
-    }
-    @Test
-    public void testFetchStudent3()throws Exception{
         Student student = StudentManager.fetchStudent("id1");
-        assertEquals(new Student("id1","John","Jones",new Degree("deg1","BSc Computer Graphics")),student);
+        assertEquals(student,new Student("id1","John","Jones",new Degree("deg1","BSc Computer Graphics")));
         Student student2 =StudentManager.fetchStudent("id1");
         assertSame(student,student2);
     }
     @Test
-    public void testFetchStudent4()throws Exception{
+    public void testFetchStudent3()throws Exception{
         Student student = StudentManager.fetchStudent("id3");
-        assertNotEquals(new Student("id3","James","Smith",new Degree("deg0","BSc Computer Science")),student);
+        assertNotEquals(student,new Student("id3","James","Smith",new Degree("deg0","BSc Computer Science")));
 
     }
     @Test
-    public void testFetchStudent5() {
+    public void testFetchStudent4() {
         try{
             Student student = StudentManager.fetchStudent("id-3");
             fail("Id shouldn't exist");
@@ -63,7 +59,7 @@ public class TestStudentManager {
         catch (NoSuchRecordException ignored){}
     }
     @Test
-    public void testFetchStudent6() {
+    public void testFetchStudent5() {
         try{
             Student student = StudentManager.fetchStudent(null);
             fail("Id shouldn't be null");

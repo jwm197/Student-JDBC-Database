@@ -24,7 +24,6 @@ public class StudentManager {
     private static final HashMap<String,Degree>degrees=new HashMap<>();
     private static final String url = "jdbc:derby:memory:studentdb";//db url
     // THE FOLLOWING METHODS MUST BE IMPLEMENTED :
-
     /**
      * Return a student instance with values from the row with the respective id in the database.
      * If an instance with this id already exists, return the existing instance and do not create a second one.
@@ -37,29 +36,44 @@ public class StudentManager {
         if(students.containsKey(id)){
             return students.get(id);
         }
-        Connection conn;
-        Statement stmt;
-        try {
+//        try {
+            Connection conn=null;
+            Statement stmt=null;
+            ResultSet rs=null;
+            try {
 
-            conn = DriverManager.getConnection(url);
-            stmt = conn.createStatement();
-            String sql = "SELECT * FROM STUDENTS WHERE id='" + id + "' ";
+                conn = DriverManager.getConnection(url);
+                stmt = conn.createStatement();
+                String sql = "SELECT * FROM STUDENTS WHERE id='" + id + "' ";
 
-            ResultSet rs = stmt.executeQuery(sql);
-            if (rs.next()) {
+                rs = stmt.executeQuery(sql);
 
-                Student student= new Student(rs.getString("id"),rs.getString("first_name"), rs.getString("name"),fetchDegree(rs.getString("degree")));
-                students.put(id,student);
-                rs.close();
-                stmt.close();
-                conn.close();
-                return student;
+                if (rs.next()) {
+                    Student student = new Student(rs.getString("id"), rs.getString("first_name"), rs.getString("name"), fetchDegree(rs.getString("degree")));
+                    students.put(id, student);
+
+                    return student;
+                }
+                throw new NoSuchRecordException("Record for id " + id + " Not found");
+            } catch (SQLException e) {
+                throw new NoSuchRecordException("Record for id " + id + " Not found " + e);
+            } finally {
+                try{
+                    if(rs!=null){
+                        rs.close();
+                    }
+                    if (stmt!=null){
+                        stmt.close();
+                    }
+                    if (stmt!=null){
+                        conn.close();
+                    }
+                }
+                 catch (SQLException e) {
+                    throw new NoSuchRecordException("Record for id " + id + " Not found " + e);
+                }
             }
-            throw new NoSuchRecordException("Record for id "+id+" Not found");
-        }
-        catch (SQLException e){
-            throw new NoSuchRecordException("Record for id "+id+" Not found "+e);
-        }
+
     }
 
     /**
@@ -123,7 +137,9 @@ public class StudentManager {
             conn = DriverManager.getConnection(url);
             stmt = conn.createStatement();
             String sql = "DELETE FROM STUDENTS WHERE id='" + student.getId() + "' ";
-            stmt.executeUpdate(sql);
+            if(stmt.executeUpdate(sql)==0){
+                throw new NoSuchRecordException("Student not in db");
+            }
 
             stmt.close();
             conn.close();
