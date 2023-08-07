@@ -19,8 +19,9 @@ public class TestStudentManager {
     @BeforeEach
     public  void init () {
         StudentDB.init();
-        new StudentManager();//reset the cache
+        StudentManager.reset();
     }
+
     // DO NOT REMOVE BLOCK ENDS HERE
 
     @Test
@@ -53,7 +54,7 @@ public class TestStudentManager {
     @Test
     public void testFetchStudent4() {
         try{
-            Student student = StudentManager.fetchStudent("id-3");
+            StudentManager.fetchStudent("id-3");
             fail("Id shouldn't exist");
         }
         catch (NoSuchRecordException ignored){}
@@ -61,7 +62,7 @@ public class TestStudentManager {
     @Test
     public void testFetchStudent5() {
         try{
-            Student student = StudentManager.fetchStudent(null);
+            StudentManager.fetchStudent(null);
             fail("Id shouldn't be null");
         }
         catch (NoSuchRecordException ignored){}
@@ -134,6 +135,25 @@ public class TestStudentManager {
         }
         catch (NoSuchRecordException ignored){}
     }
+    @Test
+    public void testUpdate() throws NoSuchRecordException {
+            Student student=new Student("id3","Clark","Kent",StudentManager.fetchDegree("deg1"));
+            StudentManager.update(student);
+            assertEquals(StudentManager.fetchStudent("id3"),student);
+    }
+    @Test
+    public void testUpdate2() throws NoSuchRecordException {
+        try {
+            Student student = StudentManager.fetchStudent("id7");
+            StudentManager.remove(student);
+            StudentManager.update(student);
+            fail("Student shouldn't be in database");
+        }
+        catch (NoSuchRecordException ignored){}
+
+    }
+
+
 
 
 

@@ -23,6 +23,12 @@ public class StudentManager {
     private static final HashMap<String,Student>students=new HashMap<>();
     private static final HashMap<String,Degree>degrees=new HashMap<>();
     private static final String url = "jdbc:derby:memory:studentdb";//db url
+
+    /**Clears the students and degrees caches*/
+    static void reset(){
+        students.clear();
+        degrees.clear();
+    }
     // THE FOLLOWING METHODS MUST BE IMPLEMENTED :
     /**
      * Return a student instance with values from the row with the respective id in the database.
@@ -36,7 +42,7 @@ public class StudentManager {
         if(students.containsKey(id)){
             return students.get(id);
         }
-//        try {
+
             Connection conn=null;
             Statement stmt=null;
             ResultSet rs=null;
@@ -45,13 +51,12 @@ public class StudentManager {
                 conn = DriverManager.getConnection(url);
                 stmt = conn.createStatement();
                 String sql = "SELECT * FROM STUDENTS WHERE id='" + id + "' ";
+               // ="SELECT s.first_name, s.name, s.degree,
 
                 rs = stmt.executeQuery(sql);
-
                 if (rs.next()) {
                     Student student = new Student(rs.getString("id"), rs.getString("first_name"), rs.getString("name"), fetchDegree(rs.getString("degree")));
                     students.put(id, student);
-
                     return student;
                 }
                 throw new NoSuchRecordException("Record for id " + id + " Not found");
@@ -65,7 +70,7 @@ public class StudentManager {
                     if (stmt!=null){
                         stmt.close();
                     }
-                    if (stmt!=null){
+                    if (conn!=null){
                         conn.close();
                     }
                 }
@@ -86,18 +91,19 @@ public class StudentManager {
      */
     public static Degree fetchDegree(String id) throws NoSuchRecordException {
 
-
+        Connection conn=null;
+        Statement stmt=null;
+        ResultSet rs=null;
         try {
             if(degrees.containsKey(id)){
                 return degrees.get(id);
             }
-            Connection conn;
-            Statement stmt;
+
             conn = DriverManager.getConnection(url);
             stmt = conn.createStatement();
             String sql = "SELECT * FROM DEGREES WHERE id='" + id + "' ";
 
-            ResultSet rs = stmt.executeQuery(sql);
+            rs = stmt.executeQuery(sql);
             if (rs.next()) {
                 Degree degree=new Degree(rs.getString("id"),rs.getString("name"));
                 degrees.put(id,degree);
@@ -110,6 +116,21 @@ public class StudentManager {
         }
         catch (NullPointerException|SQLException e){
             throw new NoSuchRecordException("Record for id "+id+" Not found "+e);
+        }
+        finally {
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+                if (stmt != null) {
+                    stmt.close();
+                }
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (SQLException e) {
+                throw new NoSuchRecordException("Record for id " + id + " Not found " + e);
+            }
         }
     }
 
@@ -130,8 +151,8 @@ public class StudentManager {
         if(students.containsValue(student)){
             students.remove(student.getId());
         }
-        Connection conn;
-        Statement stmt;
+        Connection conn=null;
+        Statement stmt=null;
 
         try {
             conn = DriverManager.getConnection(url);
@@ -140,12 +161,22 @@ public class StudentManager {
             if(stmt.executeUpdate(sql)==0){
                 throw new NoSuchRecordException("Student not in db");
             }
-
-            stmt.close();
-            conn.close();
         }
         catch (SQLException e){
             throw new NoSuchRecordException("Record for student "+student+" Not found "+e);
+        }
+        finally {
+            try {
+
+                if (stmt != null) {
+                    stmt.close();
+                }
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (SQLException e) {
+                throw new NoSuchRecordException("error accessing student "+student+" Not found "+e);
+            }
         }
 
 
@@ -168,20 +199,32 @@ public class StudentManager {
         else if(student.getId()==null){
             throw new NoSuchRecordException("Student ID is null");
         }
-        Connection conn;
-        Statement stmt;
+        Connection conn=null;
+        Statement stmt=null;
 
         try {
             conn = DriverManager.getConnection(url);
             stmt = conn.createStatement();
-            String sql = "UPDATE STUDENTS SET first_name ="+ student.getFirstName() +", name = "+student.getName()+", degree ="+student.getDegree()+"WHERE id='" + student.getId() + "' ";
-            stmt.executeUpdate(sql);
-            stmt.close();
-            conn.close();
+            String sql = "UPDATE STUDENTS SET first_name ='"+ student.getFirstName() +"', name = '"+student.getName()+"', degree ='"+student.getDegree().getId()+"'WHERE id='" + student.getId() + "'";
+            if(stmt.executeUpdate(sql)==0){
+                throw new NoSuchRecordException("Record for student "+student+" Not found ");
+            }
             students.put(student.getId(), student);
         }
         catch (SQLException e){
             throw new NoSuchRecordException("Record for student "+student+" Not found "+e);
+        }
+        finally {
+            try {
+                if (stmt != null) {
+                    stmt.close();
+                }
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (SQLException e) {
+                throw new NoSuchRecordException("Error accessing record for student "+student+" "+e);
+            }
         }
 
 
