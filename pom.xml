@@ -1,3 +1,40 @@
+2
+
+        S
+        swen301-2023-assignment1-template
+        Project overview
+
+        Pinned
+        Issues
+        0
+        Merge requests
+        0
+
+        Manage
+
+        Plan
+
+        Code
+
+        Build
+
+        Deploy
+
+        Operate
+
+        Monitor
+
+        Analyze
+        Jens Dietrich
+        swen301-2023-assignment1-template
+
+        fixed issue with older versions of Maven (3.8.*) not running @BeforeEach...
+        Jens Dietrich authored 1 week ago
+        7a1c59de
+        swen301-2023-assignment1-template
+        pom.xml
+        pom.xml
+        2.38 KiB
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
@@ -17,38 +54,40 @@
                     <target>11</target>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>2.22.2</version>
+                <configuration>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
     <dependencies>
-
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>
             <version>5.9.2</version>
             <scope>test</scope>
         </dependency>
-
-      <!-- careful upgrading: newer versions seem to have been compiled with Java 17 !! -->
-    <dependency>
-        <groupId>org.apache.derby</groupId>
-        <artifactId>derby</artifactId>
-        <version>10.14.2.0</version>
-      </dependency>
-
+        <!-- careful upgrading: newer versions seem to have been compiled with Java 17 !! -->
+        <dependency>
+            <groupId>org.apache.derby</groupId>
+            <artifactId>derby</artifactId>
+            <version>10.14.2.0</version>
+        </dependency>
         <!-- to be used for the CLI -->
         <dependency>
             <groupId>commons-cli</groupId>
             <artifactId>commons-cli</artifactId>
             <version>1.5.0</version>
         </dependency>
-
         <!-- useful for several utilities, including data structures -->
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
             <version>32.1.1-jre</version>
         </dependency>
-
         <!-- local dependency to setup database -->
         <dependency>
             <groupId>nz.ac.wgtn.swen301</groupId>
