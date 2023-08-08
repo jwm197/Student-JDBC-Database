@@ -7,6 +7,12 @@ import nz.ac.wgtn.swen301.studentdb.StudentDB;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.Collection;
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
@@ -152,6 +158,24 @@ public class TestStudentManager {
         catch (NoSuchRecordException ignored){}
 
     }
+    @Test
+    public void testFetchAllIds(){
+        assertEquals(Objects.requireNonNull(StudentManager.fetchAllStudentIds()).size(),10000,"Number of all ids is wrong");
+    }
+
+    @Test
+    public void testNewStudent()throws NoSuchRecordException{
+        Collection<String> ids=StudentManager.fetchAllStudentIds();
+        Student student=StudentManager.newStudent("George","Jack",StudentManager.fetchDegree("deg1"));
+        assertNotNull(ids,"List of ids is null");
+        assertNotNull(student,"Student is null");
+        assertNotNull(student.getId(),"student id is null");
+        assertFalse(ids.contains(student.getId()),"Id "+ student.getId()+" is already in the list");
+        Collection<String> ids2=StudentManager.fetchAllStudentIds();
+        assertNotNull(ids2,"ids2 list is null");
+        assertTrue (ids2.contains(student.getId()),"list of ids doesn't contain the id "+student.getId());
+    }
+
 
 
 

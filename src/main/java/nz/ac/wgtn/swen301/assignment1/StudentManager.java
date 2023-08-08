@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 /**
  * A student manager providing basic CRUD operations for instances of Student, and a read operation for instances of Degree.
@@ -42,7 +44,6 @@ public class StudentManager {
         if(students.containsKey(id)){
             return students.get(id);
         }
-
             Connection conn=null;
             Statement stmt=null;
             ResultSet rs=null;
@@ -51,8 +52,6 @@ public class StudentManager {
                 conn = DriverManager.getConnection(url);
                 stmt = conn.createStatement();
                 String sql = "SELECT * FROM STUDENTS WHERE id='" + id + "' ";
-               // ="SELECT s.first_name, s.name, s.degree,
-
                 rs = stmt.executeQuery(sql);
                 if (rs.next()) {
                     Student student = new Student(rs.getString("id"), rs.getString("first_name"), rs.getString("name"), fetchDegree(rs.getString("degree")));
@@ -74,9 +73,7 @@ public class StudentManager {
                         conn.close();
                     }
                 }
-                 catch (SQLException e) {
-                    throw new NoSuchRecordException("Record for id " + id + " Not found " + e);
-                }
+                 catch (SQLException ignored) {}
             }
 
     }
@@ -243,31 +240,21 @@ public class StudentManager {
      * This functionality is to be tested in nz.ac.wgtn.swen301.assignment1.TestStudentManager::testNewStudent (followed by optional numbers if multiple tests are used)
      */
     public static Student newStudent(String name,String firstName,Degree degree) {
-        Connection conn;
-        Statement stmt;
-        try {
-
-            conn = DriverManager.getConnection(url);
-            stmt = conn.createStatement();
-            String sql = "FROM STUDENTS SELECT MAX(CAST(SUBSTRING(ID, 3) AS SIGNED)) AS max_id ";
-
-            ResultSet rs = stmt.executeQuery(sql);
-            String id="ID";
-            if (rs.next()) {
-                id=id+rs;
-            }
-                Student student= new Student(id,name,firstName,degree);
-                students.put(id,student);
-                rs.close();
-                stmt.close();
-                conn.close();
-                return student;
-            }
-
-        catch (SQLException e){
-            System.out.println("SQL exception unable to connect" +e);
+        Collection<String>ids=fetchAllStudentIds();
+        String id="id0";
+        if (ids!=null&&!ids.isEmpty()){
+            id="id"+(1+ids.stream().map(i->Integer.parseInt(i.substring(2))).max(Integer::compare).orElse(0));
         }
-        return null;
+        Student student= new Student(id,name,firstName,degree);
+        students.put(id,student);
+
+        try (Connection conn = DriverManager.getConnection(url); Statement stmt = conn.createStatement()) {
+            String sql = "INSERT INTO STUDENTS VALUES ('" + id + "', '" + name + "', '" + firstName + "', '" + degree.getId() + "')";
+            stmt.executeUpdate(sql);
+
+        } catch (SQLException ignored) {
+        }
+        return student;
     }
 
     /**
@@ -283,7 +270,7 @@ public class StudentManager {
 
             conn = DriverManager.getConnection(url);
             stmt = conn.createStatement();
-            String sql = "SELECT * FROM STUDENTS";
+            String sql = "SELECT id FROM STUDENTS";
 
             ResultSet rs = stmt.executeQuery(sql);
             while(rs.next()) {
@@ -292,10 +279,11 @@ public class StudentManager {
             rs.close();
             stmt.close();
             conn.close();
+
             return ids;
         }
         catch (SQLException e){
-            return null;//throw new NoSuchRecordException("Failed to get ids"+e);
+            return null;
         }
 
     }
