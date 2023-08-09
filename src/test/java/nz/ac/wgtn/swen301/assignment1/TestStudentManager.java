@@ -159,12 +159,20 @@ public class TestStudentManager {
 
     }
     @Test
-    public void testFetchAllIds(){
+    public void testFetchAllIds1(){
         assertEquals(Objects.requireNonNull(StudentManager.fetchAllStudentIds()).size(),10000,"Number of all ids is wrong");
+    }
+    @Test
+    public void testFetchAllIds2() throws NoSuchRecordException {
+
+        assertEquals(Objects.requireNonNull(StudentManager.fetchAllStudentIds()).size(),10000,"Number of all ids is wrong");
+        StudentManager.remove(StudentManager.fetchStudent("id2"));
+        assertEquals(Objects.requireNonNull(StudentManager.fetchAllStudentIds()).size(),9999,"Number of all ids is wrong");
+
     }
 
     @Test
-    public void testNewStudent()throws NoSuchRecordException{
+    public void testNewStudent1()throws NoSuchRecordException{
         Collection<String> ids=StudentManager.fetchAllStudentIds();
         Student student=StudentManager.newStudent("George","Jack",StudentManager.fetchDegree("deg1"));
         assertNotNull(ids,"List of ids is null");
@@ -174,6 +182,13 @@ public class TestStudentManager {
         Collection<String> ids2=StudentManager.fetchAllStudentIds();
         assertNotNull(ids2,"ids2 list is null");
         assertTrue (ids2.contains(student.getId()),"list of ids doesn't contain the id "+student.getId());
+        assertEquals(ids.size() + 1, ids2.size(), "new list of ids isn't one bigger than the last one");
+    }
+    @Test
+    public void testNewStudent2()throws NoSuchRecordException{
+
+        Student student=StudentManager.newStudent("George","Jack",StudentManager.fetchDegree("deg1"));
+
     }
 
 

@@ -171,9 +171,8 @@ public class StudentManager {
                 if (conn != null) {
                     conn.close();
                 }
-            } catch (SQLException e) {
-                throw new NoSuchRecordException("error accessing student "+student+" Not found "+e);
             }
+            catch (SQLException ignored) {}
         }
 
 
@@ -219,9 +218,8 @@ public class StudentManager {
                 if (conn != null) {
                     conn.close();
                 }
-            } catch (SQLException e) {
-                throw new NoSuchRecordException("Error accessing record for student "+student+" "+e);
             }
+            catch (SQLException ignored) {}
         }
 
 
@@ -287,6 +285,7 @@ public class StudentManager {
         }
 
     }
+
 
 
 
