@@ -190,6 +190,16 @@ public class TestStudentManager {
         Student student=StudentManager.newStudent("George","Jack",StudentManager.fetchDegree("deg1"));
 
     }
+    @Test
+    public void testPerformance()  {
+        IntStream.range(0,500).parallel().forEach(num-> {
+            try {
+                StudentManager.fetchStudent("id"+((int) (Math.random() * 1)));
+            } catch (NoSuchRecordException e) {
+                e.printStackTrace();
+            }
+        });
+    }
 
 
 
