@@ -125,9 +125,7 @@ public class StudentManager {
                 if (conn != null) {
                     conn.close();
                 }
-            } catch (SQLException e) {
-                throw new NoSuchRecordException("Record for id " + id + " Not found " + e);
-            }
+            } catch (SQLException ignored) {}
         }
     }
 
@@ -281,7 +279,7 @@ public class StudentManager {
             return ids;
         }
         catch (SQLException e){
-            return null;
+            return ids;
         }
 
     }
