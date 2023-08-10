@@ -1,4 +1,1 @@
-## SWEN301 Assignment 1 Template
-
-Please refer to the assignment brief for details. 
-
+Garbage collection is interfered with because degree and student objects are cashed in hashmaps when they are initially requested from the database because using the same student or degree object it is much faster on repeat requests of the object’s contents. Without a student object being explicitly removed from the table using the remove method then garbage collection won't be called on the student. The degree object cannot be deleted once created so the garage collector can never collect it even if no students are enrolled in that degree. To fix this one could keep count of how many students are enrolled in the degree and delete the object from the cache if none are or delete it after a while of not using that object.

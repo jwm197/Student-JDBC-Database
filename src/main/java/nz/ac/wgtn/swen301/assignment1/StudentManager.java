@@ -124,8 +124,6 @@ public class StudentManager {
             }
             throw new NoSuchRecordException("Record for id " + id + " Not found");
         } catch (NullPointerException | SQLException e) {
-            throw new NoSuchRecordException("Record for id " + id + " Not found " + e);
-        } finally {
             try {
                 if (rs != null) {
                     rs.close();
@@ -137,7 +135,9 @@ public class StudentManager {
                     conn.close();
                 }
             } catch (SQLException ignored) {
+                System.out.println("Error in the sql");
             }
+            throw new NoSuchRecordException("Record for id " + id + " Not found " + e);
         }
     }
 
@@ -158,29 +158,15 @@ public class StudentManager {
         if (students.containsValue(student)) {
             students.remove(student.getId());
         }
-        Connection conn = null;
-        Statement stmt = null;
 
-        try {
-            conn = DriverManager.getConnection(url);
-            stmt = conn.createStatement();
+        try (Connection conn = DriverManager.getConnection(url); Statement stmt = conn.createStatement()) {
             String sql = "DELETE FROM STUDENTS WHERE id='" + student.getId() + "' ";
             if (stmt.executeUpdate(sql) == 0) {
                 throw new NoSuchRecordException("Student not in db");
             }
+
         } catch (SQLException e) {
             throw new NoSuchRecordException("Record for student " + student + " Not found " + e);
-        } finally {
-            try {
-
-                if (stmt != null) {
-                    stmt.close();
-                }
-                if (conn != null) {
-                    conn.close();
-                }
-            } catch (SQLException ignored) {
-            }
         }
 
 
@@ -203,12 +189,8 @@ public class StudentManager {
         } else if (student.getId() == null) {
             throw new NoSuchRecordException("Student ID is null");
         }
-        Connection conn = null;
-        Statement stmt = null;
 
-        try {
-            conn = DriverManager.getConnection(url);
-            stmt = conn.createStatement();
+        try (Connection conn = DriverManager.getConnection(url); Statement stmt = conn.createStatement()) {
             String sql = "UPDATE STUDENTS SET first_name ='" + student.getFirstName() + "', name = '" + student.getName() + "', degree ='" + student.getDegree().getId() + "'WHERE id='" + student.getId() + "'";
             if (stmt.executeUpdate(sql) == 0) {
                 throw new NoSuchRecordException("Record for student " + student + " Not found ");
@@ -216,16 +198,6 @@ public class StudentManager {
             students.put(student.getId(), student);
         } catch (SQLException e) {
             throw new NoSuchRecordException("Record for student " + student + " Not found " + e);
-        } finally {
-            try {
-                if (stmt != null) {
-                    stmt.close();
-                }
-                if (conn != null) {
-                    conn.close();
-                }
-            } catch (SQLException ignored) {
-            }
         }
 
 

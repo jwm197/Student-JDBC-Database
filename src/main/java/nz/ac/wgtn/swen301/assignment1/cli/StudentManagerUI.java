@@ -2,13 +2,11 @@ package nz.ac.wgtn.swen301.assignment1.cli;
 
 import nz.ac.wgtn.swen301.assignment1.StudentManager;
 import nz.ac.wgtn.swen301.studentdb.NoSuchRecordException;
-import nz.ac.wgtn.swen301.studentdb.Student;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
-import java.util.Collection;
-import java.util.Collections;
+
 import java.util.Objects;
 import java.util.stream.Stream;
 
@@ -23,18 +21,19 @@ public class StudentManagerUI {
      * @param arg list of the parameters required to run the command
      */
     public static void main(String[] arg) {
-       // arg = new String[]{"-export","-f","testfile"};
         try {
             switch (arg[0]) {
                 case "-fetchone":
-                    fetchOne("id"+arg[1]);
+                    fetchOne("id" + arg[1]);
                     break;
                 case "-fetchall":
                     fetchAll();
                     break;
                 case "-export":
-                    writeToCSV(arg[1],arg[2]);
+                    writeToCSV(arg[1], arg[2]);
                     break;
+                default:
+                    System.out.println("Unknown command");
             }
 
 
@@ -68,13 +67,16 @@ public class StudentManagerUI {
         }
     }
 
-    /**fetches and prints all students' details*/
+    /**
+     * fetches and prints all students' details
+     */
     private static void fetchAll() {
         StudentManager.fetchAllStudentIds().forEach(StudentManagerUI::fetchOne);
     }
 
     /**
      * fetches and prints out a student's details with a specified id
+     *
      * @param id the id of the student being fetched
      */
     private static void fetchOne(String id) {
