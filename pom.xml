@@ -7,6 +7,7 @@
     <version>1.0.0</version>
     <name>swen301-assignment1</name>
     <url>http://maven.apache.org</url>
+
     <build>
         <plugins>
             <plugin>
@@ -24,9 +25,37 @@
                 <configuration>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <version>2.1.10.RELEASE</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                        <configuration>
+                            <includeSystemScope>true</includeSystemScope>
+                            <classifier>spring-boot</classifier>
+                            <mainClass>
+                                nz.ac.wgtn.swen301.assignment1.cli.StudentManagerUI
+                            </mainClass>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
     <dependencies>
+        <!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-maven-plugin -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-maven-plugin</artifactId>
+            <version>2.1.10.RELEASE</version>
+        </dependency>
+
+
+
 
         <dependency>
             <groupId>org.junit.jupiter</groupId>
