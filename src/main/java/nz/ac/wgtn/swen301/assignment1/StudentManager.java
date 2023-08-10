@@ -62,17 +62,7 @@ public class StudentManager {
             stmt.setString(1, id);
             rs = stmt.executeQuery();
             if (rs.next()) {
-                Degree degree=null;
                 String degreeId = rs.getString("degree");
-                if(degrees.containsKey(degreeId)){
-                    degrees.get(degreeId);
-                }
-                else{
-                    degree = new Degree(degreeId, rs.getString("degree_name"));
-                    degrees.put(degreeId, degree);
-                }
-
-
                 Student student = new Student(id, rs.getString("first_name"), rs.getString("name"), fetchDegree(degreeId));
                 students.put(id, student);
                 rs.close();
