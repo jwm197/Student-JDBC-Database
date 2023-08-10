@@ -192,9 +192,10 @@ public class TestStudentManager {
     }
     @Test
     public void testPerformance()  {
-        IntStream.range(0,500).forEach(num-> {
+
+        IntStream.range(0,500).parallel().forEach(num-> {
             try {
-                StudentManager.fetchStudent("id"+((int)(Math.random()*50)));
+                StudentManager.fetchStudent("id"+((int)(Math.random()*9999)));
             } catch (NoSuchRecordException ignored) {
 
             }
