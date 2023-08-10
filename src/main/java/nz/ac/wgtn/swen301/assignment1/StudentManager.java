@@ -73,7 +73,7 @@ public class StudentManager {
                 }
 
 
-                Student student = new Student(id, rs.getString("first_name"), rs.getString("name"), degree);
+                Student student = new Student(id, rs.getString("first_name"), rs.getString("name"), fetchDegree(degreeId));
                 students.put(id, student);
                 rs.close();
                 stmt.close();

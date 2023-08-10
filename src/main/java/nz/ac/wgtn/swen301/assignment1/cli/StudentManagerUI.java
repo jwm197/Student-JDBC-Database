@@ -23,7 +23,7 @@ public class StudentManagerUI {
      * @param arg list of the parameters required to run the command
      */
     public static void main(String[] arg) {
-        arg = new String[]{"-export","-f","testfile"};
+       // arg = new String[]{"-export","-f","testfile"};
         try {
             switch (arg[0]) {
                 case "-fetchone":

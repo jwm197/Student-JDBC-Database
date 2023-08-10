@@ -191,8 +191,10 @@ public class TestStudentManager {
 
     }
     @Test
-    public void testPerformance()  {
-
+    public void testPerformance() throws NoSuchRecordException, InterruptedException {
+        StudentManager.fetchStudent("id0");
+        Thread.sleep(2);
+        long time1 = System.nanoTime();
         IntStream.range(0,500).parallel().forEach(num-> {
             try {
                 StudentManager.fetchStudent("id"+((int)(Math.random()*9999)));
@@ -200,6 +202,8 @@ public class TestStudentManager {
 
             }
         });
+        long time2=System.nanoTime();
+        assertTrue(time2-time1<=1000000000,"too slow");
     }
 
 
